@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { NetworkTopologyPanel } from "@/components/network/network-topology-panel";
 import { Badge } from "@/components/ui/badge";
@@ -28,10 +29,19 @@ export function MissionSummary() {
     <main className="grid-noise min-h-screen p-4 md:p-6">
       <div className="mx-auto flex max-w-[1500px] flex-col gap-4">
         <header className="glass flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 p-4 shadow-glow">
-          <div>
+          <div className="flex items-start gap-3">
+            <Image
+              src="/blackout-logo.png"
+              alt="BLACKOUT EXCHANGE logo"
+              width={40}
+              height={40}
+              className="mt-0.5 rounded-lg border border-info/25 bg-black/25 p-1"
+            />
+            <div>
             <p className="text-xs uppercase tracking-[0.2em] text-info">BLACKOUT EXCHANGE · Mission Summary</p>
             <h1 className="text-2xl font-semibold">Final Mission Snapshot & Replay</h1>
             <p className="text-sm text-muted">Replay deterministic ticks to explain coordination, failover, and proof gating to judges.</p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Badge tone="muted">seed {state.seed}</Badge>

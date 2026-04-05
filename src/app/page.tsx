@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const proofPillars = [
   {
@@ -33,10 +34,20 @@ export default function LandingPage() {
     <main className="min-h-screen px-6 py-8 md:px-12 md:py-12">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         <section className="glass rounded-3xl border border-info/20 p-8 shadow-glow md:p-10">
-          <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.16em]">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/blackout-logo.png"
+              alt="BLACKOUT EXCHANGE logo"
+              width={52}
+              height={52}
+              className="rounded-xl border border-info/30 bg-black/30 p-1 shadow-glow"
+              priority
+            />
+            <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.16em]">
             <span className="rounded-full border border-info/40 bg-info/15 px-3 py-1 text-info">BLACKOUT EXCHANGE</span>
             <span className="rounded-full border border-white/15 px-3 py-1 text-muted">Deterministic Demo Ready</span>
             <span className="rounded-full border border-success/30 bg-success/10 px-3 py-1 text-success">Judge-Friendly Story Mode</span>
+            </div>
           </div>
 
           <h1 className="mt-5 max-w-5xl text-4xl font-semibold leading-tight md:text-6xl">

@@ -1,5 +1,9 @@
 # BLACKOUT EXCHANGE
 
+<p align="center">
+	<img src="./public/blackout-logo.png" alt="BLACKOUT EXCHANGE logo" width="200" />
+</p>
+
 Leaderless Emergency Agent Economy.
 
 ## What this project demonstrates

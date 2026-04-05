@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AgentRosterPanel } from "@/components/dashboard/agent-roster-panel";
 import { ChaosControls } from "@/components/dashboard/chaos-controls";
@@ -249,12 +250,21 @@ export function MissionControl() {
         <header className="panel-elevated relative overflow-hidden rounded-2xl border border-info/25 p-4 shadow-glow">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(74,166,255,0.16),transparent_35%)]" />
           <div className="relative flex flex-wrap items-center justify-between gap-3">
-          <div>
+          <div className="flex items-start gap-3">
+            <Image
+              src="/blackout-logo.png"
+              alt="BLACKOUT EXCHANGE logo"
+              width={42}
+              height={42}
+              className="mt-0.5 rounded-lg border border-info/25 bg-black/25 p-1"
+            />
+            <div>
             <p className="text-xs uppercase tracking-[0.2em] text-info">BLACKOUT EXCHANGE · Mission Control</p>
             <h1 className="text-2xl font-semibold">Leaderless Emergency Agent Economy</h1>
             <p className="text-sm text-muted">{headline} · Deterministic seed {state.seed} · Tick {state.tick}</p>
             <p className="mt-1 text-[11px] text-muted">Simulation runtime is local/deterministic. Architecture boundaries are protocol-adapter ready.</p>
             <p className="mt-1 text-[11px] text-muted">Judge Demo runs a repeatable 8-step story in ~72 seconds.</p>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">

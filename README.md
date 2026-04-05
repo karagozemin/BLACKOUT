@@ -1,169 +1,133 @@
 # BLACKOUT EXCHANGE
 
 <p align="center">
-	<img src="./public/blackout-logo.png" alt="BLACKOUT EXCHANGE logo" width="200" />
+  <img src="./public/blackout-logo.png" alt="BLACKOUT EXCHANGE logo" width="200" />
 </p>
 
-Leaderless Emergency Agent Economy.
+> Leaderless Emergency Agent Economy
 
-## What this project demonstrates
+BLACKOUT EXCHANGE is a deterministic simulation of a degraded emergency environment where heterogeneous agents coordinate without a central orchestrator, reject malicious completion claims, and allow settlement only after verifiable coordination proof.
 
-- No central orchestrator node in coordination logic
-- Peer-to-peer discovery and local task negotiation
-- Fault tolerance through autonomous failover
-- Adversarial resistance against fake completion claims
-- Proof-of-coordination gating before settlement
+## 🚀 What this project proves
 
-## Tech stack
+- Local coordination can work without a global dispatcher
+- Agents can negotiate ownership using local metrics
+- Failover can recover task execution after node loss
+- Fake completion claims can be isolated by verifiers
+- Settlement can be safely gated by proof-before-payment
 
-- Next.js 15 App Router + TypeScript
-- Tailwind CSS + Framer Motion
-- Zustand for client simulation state
-- React Flow for topology mesh view
+## 🧱 Tech stack
 
-## Architecture
+- `Next.js 15` (App Router) + `TypeScript`
+- `Tailwind CSS` + `Framer Motion`
+- `Zustand` (simulation runtime state)
+- `React Flow` (mesh topology visualization)
+- `Playwright` (end-to-end validation)
 
-`src/lib/simulation` is split into independent modules:
+## 🗂️ Project structure (quick map)
 
-- `engine/modules/peer-discovery.ts`
-- `engine/modules/negotiation.ts`
-- `engine/modules/failover.ts`
-- `engine/modules/execution.ts`
-- `engine/modules/verification-settlement.ts`
+- `src/app` → routes (`/`, `/mission-control`, `/mission-summary`)
+- `src/components/dashboard` → mission control panels + Judge Demo overlay
+- `src/components/network` → topology panel
+- `src/lib/simulation` → engine, modules, proof/verification/settlement
+- `src/store/simulation-store.ts` → runtime state + history/replay snapshots
+- `e2e/judge-demo.spec.ts` → deterministic guided demo test
+- `.github/workflows/ci.yml` → CI quality gates
 
-No module is a global decision authority; each module mutates only its domain slice and communicates via typed events/messages.
+## ⚙️ How the simulation engine works
 
-## Simulation Boundary vs Production-Ready
+The runtime is tick-based. At each tick, independent modules run in deterministic order:
 
-### Simulated in this demo runtime
+1. `peer-discovery`
+2. `negotiation`
+3. `execution`
+4. `failover`
+5. `verification-settlement`
 
-- P2P transport layer (message passing is local in-memory simulation)
-- Witness evidence payload generation and pseudo hashes
-- Verifier signatures and settlement receipt issuance
-- Chaos actions (kill/degrade/fake completion) as deterministic fault injection
+`chaos.ts` can inject controlled faults (`kill-agent`, `degrade-network`, `spawn-fake-completion`, `add-urgent-task`) to stress resilience and verification logic.
 
-### Production-ready architecture pieces
+## 🛡️ Proof → Verification → Settlement gate
 
-- Modular engine boundaries (`peer-discovery`, `negotiation`, `failover`, `execution`, `verification-settlement`)
-- Strong typed domain contracts (`Agent`, `Task`, `CoordinationProof`, `VerificationDecision`, `SettlementReceipt`)
-- Proof-before-settlement gate logic and malicious isolation path
-- Deterministic simulation harness for reproducible protocol adapter testing
+Settlement is released only when all conditions are satisfied:
 
-### Differentiation layer
+1. witness quorum exists
+2. proof confidence is above threshold
+3. verifier quorum approves
+4. no blocking rejection is present
 
-- `verification/proof.ts`: builds witness-backed coordination proof
-- `verification/verifier.ts`: verifier A/B approvals/rejections
-- `settlement/settlement.ts`: settlement gate + receipt model
+This prevents "completed" claims from unlocking value without sufficient evidence.
 
-Settlement only occurs when:
+## 🧪 Simulation boundary (transparency)
 
-1. witness quorum exists,
-2. proof confidence threshold is met,
-3. verifier quorum approves,
-4. no rejection blocks payout.
+### Included in this repository
 
-## Agent roles
+- In-memory peer message flow
+- Witness evidence generation and pseudo hashing
+- Verifier approval/rejection decisions
+- Settlement receipt generation
 
-Scout, Router, Dispatch, Executor, Battery Manager, Safety, Verifier A/B, Reputation, Settlement, Reserve, Relay.
+### Not yet integrated
 
-## Running locally
+- Real on-chain settlement execution
+- Persistent storage backend
+- Production-grade cryptographic signature verification
+
+> Summary: The demo is story-ready and technically coherent. The architecture is intentionally adapter-friendly for real protocol integration.
+
+## 🧭 Mission Control usage
+
+1. Open `/mission-control`
+2. Click `Start Judge Demo` to run the 8-step guided flow
+3. Use overlay `Prev / Next` for manual step navigation
+4. Open `Mission Summary` for replay and final metrics
+
+## 🔁 Mission Summary and replay
+
+- Use the tick slider to inspect historical snapshots
+- Use trust evolution chart to explain confidence shifts
+- Show rejection decisions and settlement receipts in one flow
+
+## 🧰 Local development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open `http://localhost:3000` and enter Mission Control.
+Open `http://localhost:3000`.
 
-## Deterministic demo mode
+## ✅ Quality gates
 
-Seeded deterministic simulation is default (`seed=42`), so demo behavior is repeatable.
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
 
-Run smoke harness:
+CI enforces the same three gates in `.github/workflows/ci.yml`.
+
+## 🧪 Deterministic smoke run
 
 ```bash
 npm run sim:smoke
 ```
 
-## UI Smoke Test (Playwright)
+## 🧠 60-second jury walkthrough
 
-First-time setup:
+1. Show topology and highlight no central orchestrator
+2. Trigger urgent task and show local negotiation
+3. Force node failure and show failover event
+4. Inject fake completion and show verifier rejection
+5. Show settlement blocked until proof conditions are met
+6. Finish with Mission Summary replay and outcome metrics
 
-```bash
-npm install
-npx playwright install chromium
-```
+## 🧾 Submission checklist
 
-Run deterministic UI smoke checks:
+- [ ] `lint/build/e2e` all green
+- [ ] `README.md` and `ARCHITECTURE.md` aligned
+- [ ] Judge Demo flow verified live
+- [ ] Simulation boundary clearly stated
 
-```bash
-npm run test:e2e
-```
+---
 
-## Quality Gates
-
-This project includes a minimal CI pipeline in `.github/workflows/ci.yml` with these required gates:
-
-1. `npm install`
-2. `npm run lint`
-3. `npm run build`
-4. `npm run test:e2e`
-
-The Judge Demo path is protected by deterministic Playwright assertions (guided steps, rejection evidence, and Mission Summary continuity), so demo regressions are caught before merge.
-
-The suite validates:
-
-- Mission Control renders correctly
-- `Start Judge Demo` launches and advances guided steps
-- Mission Summary receives in-session state after navigation
-- Direct Summary visit shows explicit "No Mission Run Yet" guidance
-
-## Mission Summary + Replay
-
-- Visit `/mission-summary` after running Mission Control.
-- Use the replay slider to scrub ticks and inspect topology/history snapshots.
-- Trust evolution chart shows confidence drift under chaos and failover pressure.
-- Summary explicitly highlights fake completion rejections and settlement receipts.
-
-## Judge demo script (60 seconds)
-
-1. Open Mission Control.
-2. Show mesh topology and emphasize no central node.
-3. Add urgent task and watch local consensus event log.
-4. Kill active agent and show failover event.
-5. Trigger fake completion and show verifier rejection + blocked settlement.
-6. Show successful settlement receipts only after proof quorum.
-
-## Judge Demo Mode (60–90s guided)
-
-- In `/mission-control`, click `Start Judge Demo`.
-- The app runs a deterministic 8-step guided spotlight:
-	1. peer discovery
-	2. local negotiation
-	3. node failure
-	4. failover recovery
-	5. malicious fake completion
-	6. verifier rejection
-	7. proof-before-settlement
-	8. mission summary handoff
-- Spotlights and step cards direct judges to the right panel at the right time.
-
-## What is simulated vs real
-
-Simulated:
-
-- Peer message transport
-- Negotiation rounds
-- Proof evidence generation
-- Verifier signatures
-- Settlement receipts
-
-Not yet integrated:
-
-- Real protocol networking stack
-- Persistent storage and cryptographic signature verification
-- On-chain settlement or external payment rails
-
-Ready for real protocol integration later:
-
-- Engine modules and typed contracts are adapter-friendly (`types/index.ts` + module boundaries).
+For deep technical details: [`ARCHITECTURE.md`](./ARCHITECTURE.md)

@@ -21,6 +21,7 @@ export function ChaosControls() {
     <Card>
       <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Chaos Controls</h3>
       <p className="mt-1 text-xs text-muted">Inject stress and watch decentralized recovery in real-time.</p>
+      <p className="mt-1 text-[11px] text-muted">These are simulation fault injections, not external protocol calls.</p>
 
       <div className="mt-3 grid grid-cols-1 gap-2">
         <select

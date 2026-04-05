@@ -27,8 +27,11 @@ export function ProofPanel() {
               </div>
               <p className="mt-1 text-[11px] text-muted">claimant: {proof.claimantAgentId}</p>
               <p className="mt-1 text-xs text-foreground/90">
-                Witnesses {proof.witnessEvidence.length}/{proof.witnessThreshold} · confidence {proof.coordinationConfidence}
+                Witnesses {proof.witnessEvidence.length}/{proof.witnessThreshold} · coverage {proof.witnessCoverage} · confidence {proof.coordinationConfidence}
               </p>
+              {proof.anomalyFlags.length > 0 && (
+                <p className="mt-1 text-[11px] text-danger">anomalies: {proof.anomalyFlags.join(", ")}</p>
+              )}
               <p className="mt-1 truncate text-[11px] text-muted">hash {proof.evidenceHash}</p>
             </article>
           ))}

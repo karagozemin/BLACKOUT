@@ -49,6 +49,18 @@ export function createCoordinationProof(
   const normalizedScore = witnessEvidence.length > 0 ? evidenceScore / witnessEvidence.length : 0;
   const thresholdFactor = Math.min(1, witnessEvidence.length / witnessThreshold);
   const coordinationConfidence = Number((normalizedScore * thresholdFactor).toFixed(3));
+  const witnessCoverage = Number((witnessEvidence.length / Math.max(witnessThreshold, 1)).toFixed(3));
+
+  const anomalyFlags: string[] = [];
+  if (claimant.failureState.liarMode) {
+    anomalyFlags.push("claimant_flagged_malicious");
+  }
+  if (witnessEvidence.length < witnessThreshold) {
+    anomalyFlags.push("insufficient_witness_quorum");
+  }
+  if (coordinationConfidence < 0.58) {
+    anomalyFlags.push("low_coordination_confidence");
+  }
 
   const status = witnessEvidence.length >= witnessThreshold && coordinationConfidence >= 0.58 ? "sufficient" : "insufficient";
   const evidenceHash = pseudoHash(
@@ -62,6 +74,8 @@ export function createCoordinationProof(
     witnessThreshold,
     coordinationConfidence,
     evidenceHash,
+    witnessCoverage,
+    anomalyFlags,
     status
   };
 }

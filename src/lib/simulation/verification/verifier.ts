@@ -5,6 +5,14 @@ function decisionReason(proof: CoordinationProof, liarMode: boolean) {
     return "Claimant flagged as malicious: witness telemetry conflict detected.";
   }
 
+  if (proof.anomalyFlags.includes("insufficient_witness_quorum")) {
+    return "Insufficient witness quorum for coordination proof.";
+  }
+
+  if (proof.anomalyFlags.includes("low_coordination_confidence")) {
+    return "Coordination confidence below settlement threshold.";
+  }
+
   if (proof.witnessEvidence.length < proof.witnessThreshold) {
     return "Insufficient witness quorum for coordination proof.";
   }

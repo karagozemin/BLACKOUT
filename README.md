@@ -29,6 +29,22 @@ Leaderless Emergency Agent Economy.
 
 No module is a global decision authority; each module mutates only its domain slice and communicates via typed events/messages.
 
+## Simulation Boundary vs Production-Ready
+
+### Simulated in this demo runtime
+
+- P2P transport layer (message passing is local in-memory simulation)
+- Witness evidence payload generation and pseudo hashes
+- Verifier signatures and settlement receipt issuance
+- Chaos actions (kill/degrade/fake completion) as deterministic fault injection
+
+### Production-ready architecture pieces
+
+- Modular engine boundaries (`peer-discovery`, `negotiation`, `failover`, `execution`, `verification-settlement`)
+- Strong typed domain contracts (`Agent`, `Task`, `CoordinationProof`, `VerificationDecision`, `SettlementReceipt`)
+- Proof-before-settlement gate logic and malicious isolation path
+- Deterministic simulation harness for reproducible protocol adapter testing
+
 ### Differentiation layer
 
 - `verification/proof.ts`: builds witness-backed coordination proof
@@ -65,6 +81,13 @@ Run smoke harness:
 npm run sim:smoke
 ```
 
+## Mission Summary + Replay
+
+- Visit `/mission-summary` after running Mission Control.
+- Use the replay slider to scrub ticks and inspect topology/history snapshots.
+- Trust evolution chart shows confidence drift under chaos and failover pressure.
+- Summary explicitly highlights fake completion rejections and settlement receipts.
+
 ## Judge demo script (60 seconds)
 
 1. Open Mission Control.
@@ -83,6 +106,12 @@ Simulated:
 - Proof evidence generation
 - Verifier signatures
 - Settlement receipts
+
+Not yet integrated:
+
+- Real protocol networking stack
+- Persistent storage and cryptographic signature verification
+- On-chain settlement or external payment rails
 
 Ready for real protocol integration later:
 

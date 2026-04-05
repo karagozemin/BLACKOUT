@@ -8,6 +8,7 @@ export const verificationSettlementModule: SimulationModule = {
     const nextState = {
       ...state,
       tasks: { ...state.tasks },
+      agents: { ...state.agents },
       verificationDecisions: [...state.verificationDecisions],
       settlementReceipts: [...state.settlementReceipts],
       metrics: { ...state.metrics }
@@ -42,14 +43,43 @@ export const verificationSettlementModule: SimulationModule = {
         });
 
         if (!verification.approved) {
+          const claimant = nextState.agents[proof.claimantAgentId];
+          if (claimant?.failureState.liarMode && !claimant.failureState.isolated) {
+            nextState.agents[claimant.id] = {
+              ...claimant,
+              status: "isolated",
+              failureState: {
+                ...claimant.failureState,
+                isolated: true
+              },
+              metrics: {
+                ...claimant.metrics,
+                trust: Math.max(0, claimant.metrics.trust - 28)
+              }
+            };
+            nextState.metrics.maliciousAgentsIsolated += 1;
+
+            context.addEvent({
+              level: "danger",
+              category: "agent",
+              agentId: claimant.id,
+              taskId: task.id,
+              title: "Malicious node isolated",
+              description: `${claimant.id} was isolated after submitting unverifiable completion evidence for ${task.id}.`
+            });
+          }
+
           nextState.tasks[task.id] = {
             ...task,
             verificationStatus: "rejected",
             settlementStatus: "blocked",
-            status: "failed"
+            status: "failed",
+            rejectionReason: verification.decisions.find((decision) => decision.verdict === "reject")?.reason
           };
 
-          nextState.metrics.falseCompletionsRejected += 1;
+          if (proof.anomalyFlags.includes("claimant_flagged_malicious")) {
+            nextState.metrics.falseCompletionsRejected += 1;
+          }
 
           context.addEvent({
             level: "danger",
@@ -93,7 +123,8 @@ export const verificationSettlementModule: SimulationModule = {
           ...task,
           verificationStatus: "approved",
           settlementStatus: "settled",
-          status: "settled"
+          status: "settled",
+          rejectionReason: undefined
         };
         nextState.metrics.tasksCompleted += 1;
         nextState.metrics.settlementSuccessCount += 1;

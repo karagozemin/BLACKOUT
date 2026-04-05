@@ -97,7 +97,9 @@ export function createSeedTasks(rng: () => number): Record<string, Task> {
       assignedAgentIds: [],
       verificationStatus: "pending",
       settlementStatus: "blocked",
-      riskLevel: (Math.floor(randomBetween(rng, 1, 5.99)) as 1 | 2 | 3 | 4 | 5)
+      riskLevel: (Math.floor(randomBetween(rng, 1, 5.99)) as 1 | 2 | 3 | 4 | 5),
+      negotiationRound: 0,
+      coordinationPath: []
     };
   }
 

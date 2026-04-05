@@ -69,6 +69,9 @@ export interface Task {
   verificationStatus: VerificationStatus;
   settlementStatus: SettlementStatus;
   riskLevel: 1 | 2 | 3 | 4 | 5;
+  negotiationRound: number;
+  coordinationPath: string[];
+  rejectionReason?: string;
 }
 
 export type MessageKind =
@@ -119,6 +122,8 @@ export interface CoordinationProof {
   witnessThreshold: number;
   coordinationConfidence: number;
   evidenceHash: string;
+  witnessCoverage: number;
+  anomalyFlags: string[];
   status: "collecting" | "sufficient" | "insufficient";
 }
 
@@ -154,6 +159,8 @@ export interface MissionMetrics {
   falseCompletionsRejected: number;
   averageCoordinationLatency: number;
   settlementSuccessCount: number;
+  maliciousAgentsIsolated: number;
+  droppedMessages: number;
 }
 
 export interface SimulationEvent {

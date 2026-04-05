@@ -17,13 +17,24 @@ export const failoverModule: SimulationModule = {
         const executor = executorId ? nextState.agents[executorId] : undefined;
 
         if (!executor || executor.status === "offline" || executor.failureState.isolated) {
+          if (executor) {
+            nextState.agents[executor.id] = {
+              ...executor,
+              metrics: {
+                ...executor.metrics,
+                trust: Math.max(0, executor.metrics.trust - 6)
+              }
+            };
+          }
+
           const backupId = task.assignedAgentIds[1];
           const backup = backupId ? nextState.agents[backupId] : undefined;
 
           if (backup && backup.status !== "offline") {
             nextState.tasks[task.id] = {
               ...task,
-              assignedAgentIds: [backup.id]
+              assignedAgentIds: [backup.id],
+              coordinationPath: [...task.coordinationPath, backup.id]
             };
 
             nextState.agents[backup.id] = {
@@ -49,7 +60,8 @@ export const failoverModule: SimulationModule = {
             nextState.tasks[task.id] = {
               ...task,
               status: "queued",
-              assignedAgentIds: []
+              assignedAgentIds: [],
+              coordinationPath: [...task.coordinationPath, "requeued"]
             };
 
             context.addEvent({

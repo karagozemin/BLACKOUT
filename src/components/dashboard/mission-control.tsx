@@ -5,6 +5,7 @@ import { AgentRosterPanel } from "@/components/dashboard/agent-roster-panel";
 import { ChaosControls } from "@/components/dashboard/chaos-controls";
 import { EventStreamPanel } from "@/components/dashboard/event-stream-panel";
 import { MissionStatusPanel } from "@/components/dashboard/mission-status-panel";
+import { RealityBoundaryPanel } from "@/components/dashboard/reality-boundary-panel";
 import { TaskQueuePanel } from "@/components/dashboard/task-queue-panel";
 import { NetworkTopologyPanel } from "@/components/network/network-topology-panel";
 import { ProofPanel } from "@/components/proof/proof-panel";
@@ -40,6 +41,7 @@ export function MissionControl() {
             <p className="text-xs uppercase tracking-[0.2em] text-info">BLACKOUT EXCHANGE · Mission Control</p>
             <h1 className="text-2xl font-semibold">Leaderless Emergency Agent Economy</h1>
             <p className="text-sm text-muted">{headline} · Deterministic seed {state.seed} · Tick {state.tick}</p>
+            <p className="mt-1 text-[11px] text-muted">Simulation runtime is local/deterministic. Architecture boundaries are protocol-adapter ready.</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -59,6 +61,9 @@ export function MissionControl() {
             >
               {state.running ? "Pause" : "Resume"}
             </button>
+            <a href="/mission-summary" className="rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold text-foreground hover:bg-white/20">
+              Mission Summary
+            </a>
           </div>
         </header>
 
@@ -73,6 +78,7 @@ export function MissionControl() {
 
           <div className="space-y-4 xl:col-span-4">
             <MissionStatusPanel />
+            <RealityBoundaryPanel />
             <ChaosControls />
             <ProofPanel />
             <SettlementPanel />

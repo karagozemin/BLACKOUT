@@ -39,7 +39,9 @@ function urgentTask(state: SimulationState, tick: number, rng: () => number): Ta
     status: "queued",
     verificationStatus: "pending",
     settlementStatus: "blocked",
-    riskLevel: 5
+    riskLevel: 5,
+    negotiationRound: 0,
+    coordinationPath: []
   };
 }
 
@@ -97,7 +99,8 @@ export function applyChaosAction(state: SimulationState, action: ChaosAction, ti
         ...task,
         assignedAgentIds: agent ? [agent.id] : task.assignedAgentIds,
         status: "executing",
-        startedAtTick: tick - task.estimatedEffort - 1
+        startedAtTick: tick - task.estimatedEffort - 1,
+        coordinationPath: ["adversarial-injection", ...(agent ? [agent.id] : [])]
       };
     }
 

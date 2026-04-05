@@ -36,6 +36,9 @@ export function TaskQueuePanel() {
             <p className="mt-2 text-[11px] text-muted">
               urgency {task.urgency}/5 · risk {task.riskLevel}/5 · assignees {task.assignedAgentIds.join(", ") || "none"}
             </p>
+            <p className="mt-1 text-[11px] text-muted">
+              negotiation round {task.negotiationRound} · path {task.coordinationPath.join(" → ") || "pending"}
+            </p>
           </article>
         ))}
       </div>

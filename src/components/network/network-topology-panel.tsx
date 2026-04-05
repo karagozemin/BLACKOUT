@@ -11,6 +11,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Card } from "@/components/ui/card";
+import type { SimulationState } from "@/lib/simulation/types";
 import { useSimulationStore } from "@/store/simulation-store";
 
 interface AgentNodeData extends Record<string, unknown> {
@@ -28,8 +29,9 @@ const statusColor: Record<string, string> = {
   isolated: "#F75C5C"
 };
 
-export function NetworkTopologyPanel() {
-  const { state } = useSimulationStore();
+export function NetworkTopologyPanel({ stateOverride, compact = false }: { stateOverride?: SimulationState; compact?: boolean }) {
+  const { state: liveState } = useSimulationStore();
+  const state = stateOverride ?? liveState;
 
   const { nodes, edges } = useMemo(() => {
     const agents = Object.values(state.agents);
@@ -83,12 +85,12 @@ export function NetworkTopologyPanel() {
   }, [state.agents]);
 
   return (
-    <Card className="h-[640px] overflow-hidden p-2">
+    <Card className={compact ? "h-[420px] overflow-hidden p-2" : "h-[640px] overflow-hidden p-2"}>
       <div className="mb-2 px-2">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Peer-to-Peer Network Topology</h3>
         <p className="text-xs text-muted">No central orchestrator node exists. Consensus emerges through local peer links.</p>
       </div>
-      <div className="h-[580px] rounded-xl border border-white/10 bg-panel/40">
+      <div className={compact ? "h-[360px] rounded-xl border border-white/10 bg-panel/40" : "h-[580px] rounded-xl border border-white/10 bg-panel/40"}>
         <ReactFlow nodes={nodes} edges={edges} fitView>
           <MiniMap zoomable pannable style={{ backgroundColor: "#0e1626" }} />
           <Controls />

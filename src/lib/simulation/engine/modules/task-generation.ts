@@ -24,7 +24,9 @@ function createTask(id: string, tick: number, type: TaskType, zone: string): Tas
     assignedAgentIds: [],
     verificationStatus: "pending",
     settlementStatus: "blocked",
-    riskLevel: 4
+    riskLevel: 4,
+    negotiationRound: 0,
+    coordinationPath: []
   };
 }
 

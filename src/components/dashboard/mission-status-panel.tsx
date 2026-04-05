@@ -13,14 +13,17 @@ export function MissionStatusPanel() {
     ["Tasks settled", settled],
     ["Tasks failed", failed],
     ["Total tasks", total],
-    ["Failovers", state.metrics.failoversHandled],
+    ["Failovers handled", state.metrics.failoversHandled],
     ["Rejected fake claims", state.metrics.falseCompletionsRejected],
+    ["Malicious nodes isolated", state.metrics.maliciousAgentsIsolated],
+    ["Dropped messages", state.metrics.droppedMessages],
     ["Settlement receipts", state.metrics.settlementSuccessCount]
   ];
 
   return (
     <Card>
       <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Mission Status</h3>
+      <p className="mt-1 text-xs text-muted">Local coordination, resilience, and security posture at current tick.</p>
       <div className="mt-3 space-y-2">
         {rows.map(([label, value]) => (
           <div key={label} className="flex items-center justify-between rounded-lg border border-white/10 bg-panelSoft/70 px-3 py-2 text-xs">

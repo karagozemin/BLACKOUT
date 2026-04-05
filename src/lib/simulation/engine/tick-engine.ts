@@ -49,7 +49,9 @@ export function createInitialState(seed = 42): SimulationState {
       failoversHandled: 0,
       falseCompletionsRejected: 0,
       averageCoordinationLatency: 0,
-      settlementSuccessCount: 0
+      settlementSuccessCount: 0,
+      maliciousAgentsIsolated: 0,
+      droppedMessages: 0
     }
   };
 }
@@ -95,6 +97,9 @@ export function runTick(state: SimulationState, chaosActions: ChaosAction[] = []
   const eventBus = new SimulationEventBus();
   const transientEvents: Omit<SimulationEvent, "id" | "tick">[] = [];
   const transientMessages: Omit<Message, "id" | "tick">[] = [];
+  let droppedThisTick = 0;
+
+  const dropRate = Math.min(0.45, workingState.network.droppedMessageRate + Object.keys(workingState.network.degradedRegions).length * 0.015);
 
   const context = {
     rng,
@@ -103,6 +108,10 @@ export function runTick(state: SimulationState, chaosActions: ChaosAction[] = []
       transientEvents.push(event);
     },
     addMessage: (message: Omit<Message, "id" | "tick">) => {
+      if (rng() < dropRate) {
+        droppedThisTick += 1;
+        return;
+      }
       transientMessages.push(message);
     }
   };
@@ -111,6 +120,15 @@ export function runTick(state: SimulationState, chaosActions: ChaosAction[] = []
     workingState = module.run(workingState, context);
   });
 
+  if (droppedThisTick > 0) {
+    transientEvents.push({
+      level: "warning",
+      category: "network",
+      title: "Packet loss observed",
+      description: `${droppedThisTick} coordination messages were dropped under degraded conditions.`
+    });
+  }
+
   withIds<SimulationEvent>(transientEvents, tick, "evt", workingState.events.length).forEach((event) => {
     eventBus.publishEvent(event);
   });
@@ -118,6 +136,8 @@ export function runTick(state: SimulationState, chaosActions: ChaosAction[] = []
   withIds<Message>(transientMessages, tick, "msg", workingState.messages.length).forEach((message) => {
     eventBus.publishMessage(message);
   });
+
+  workingState.metrics.droppedMessages += droppedThisTick;
 
   workingState.events = [...workingState.events, ...eventBus.flushEvents()].slice(-220);
   workingState.messages = [...workingState.messages, ...eventBus.flushMessages()].slice(-320);

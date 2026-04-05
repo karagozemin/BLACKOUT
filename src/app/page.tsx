@@ -11,6 +11,9 @@ export default function LandingPage() {
             No orchestrator. No blind settlement. A resilient mesh of heterogeneous agents negotiating tasks and proving
             coordination before payment.
           </p>
+          <p className="mt-2 max-w-3xl text-[12px] text-muted">
+            Demo runtime is deterministic simulation; module boundaries and proof-gating architecture are integration-ready.
+          </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/mission-control"

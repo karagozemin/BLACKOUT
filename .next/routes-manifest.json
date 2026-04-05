@@ -37,6 +37,12 @@
       "regex": "^/mission\\-control(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/mission\\-control(?:/)?$"
+    },
+    {
+      "page": "/mission-summary",
+      "regex": "^/mission\\-summary(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mission\\-summary(?:/)?$"
     }
   ],
   "dataRoutes": [],

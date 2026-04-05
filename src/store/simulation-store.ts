@@ -4,8 +4,18 @@ import { create } from "zustand";
 import { createInitialState, runTick } from "@/lib/simulation/engine/tick-engine";
 import type { Agent, ChaosAction, SimulationEvent, SimulationState } from "@/lib/simulation/types";
 
+export interface SimulationSnapshot {
+  tick: number;
+  averageTrust: number;
+  onlineAgents: number;
+  settledTasks: number;
+  failedTasks: number;
+  state: SimulationState;
+}
+
 interface SimulationStore {
   state: SimulationState;
+  history: SimulationSnapshot[];
   queuedChaos: ChaosAction[];
   setRunning: (running: boolean) => void;
   step: () => void;
@@ -14,9 +24,31 @@ interface SimulationStore {
 }
 
 const initialSeed = 42;
+const maxHistory = 260;
+
+function toSnapshot(state: SimulationState): SimulationSnapshot {
+  const agents = Object.values(state.agents);
+  const averageTrust =
+    agents.length > 0
+      ? Number((agents.reduce((sum, agent) => sum + agent.metrics.trust, 0) / agents.length).toFixed(2))
+      : 0;
+  const tasks = Object.values(state.tasks);
+
+  return {
+    tick: state.tick,
+    averageTrust,
+    onlineAgents: agents.filter((agent) => agent.status !== "offline").length,
+    settledTasks: tasks.filter((task) => task.status === "settled").length,
+    failedTasks: tasks.filter((task) => task.status === "failed").length,
+    state
+  };
+}
+
+const initialState = createInitialState(initialSeed);
 
 export const useSimulationStore = create<SimulationStore>((set, get) => ({
-  state: createInitialState(initialSeed),
+  state: initialState,
+  history: [toSnapshot(initialState)],
   queuedChaos: [],
   setRunning: (running: boolean) =>
     set((previous: SimulationStore) => ({
@@ -26,18 +58,22 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
       }
     })),
   step: () => {
-    const { state, queuedChaos } = get();
+    const { state, queuedChaos, history } = get();
     const next = runTick(state, queuedChaos);
+    const nextHistory = [...history, toSnapshot(next)].slice(-maxHistory);
 
     set({
       state: next,
+      history: nextHistory,
       queuedChaos: []
     });
   },
   queueChaos: (action: ChaosAction) => {
     if (action.type === "reset") {
+      const fresh = createInitialState(initialSeed);
       set({
-        state: createInitialState(initialSeed),
+        state: fresh,
+        history: [toSnapshot(fresh)],
         queuedChaos: []
       });
       return;
@@ -63,10 +99,14 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
     });
   },
   reset: () =>
-    set({
-      state: createInitialState(initialSeed),
-      queuedChaos: []
-    })
+    {
+      const fresh = createInitialState(initialSeed);
+      set({
+        state: fresh,
+        history: [toSnapshot(fresh)],
+        queuedChaos: []
+      });
+    }
 }));
 
 function humanReadableChaos(action: ChaosAction) {

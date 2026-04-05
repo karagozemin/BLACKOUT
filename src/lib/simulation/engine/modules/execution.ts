@@ -43,6 +43,15 @@ export const executionModule: SimulationModule = {
           return;
         }
 
+        nextState.agents[executor.id] = {
+          ...executor,
+          metrics: {
+            ...executor.metrics,
+            battery: Math.max(4, executor.metrics.battery - 1),
+            health: Math.max(50, executor.metrics.health - 0.2)
+          }
+        };
+
         const elapsed = context.tick - (task.startedAtTick ?? context.tick);
         const done = elapsed >= task.estimatedEffort;
         if (!done) {
@@ -54,7 +63,8 @@ export const executionModule: SimulationModule = {
         nextState.tasks[task.id] = {
           ...task,
           status: "verifying",
-          completedClaimAtTick: context.tick
+          completedClaimAtTick: context.tick,
+          coordinationPath: task.coordinationPath.length > 0 ? task.coordinationPath : [executor.id]
         };
 
         nextState.proofs[task.id] = proof;

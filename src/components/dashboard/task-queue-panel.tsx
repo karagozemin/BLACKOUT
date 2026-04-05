@@ -25,18 +25,21 @@ export function TaskQueuePanel() {
         <Badge tone="muted">{tasks.length} total</Badge>
       </div>
       <p className="mb-2 text-[11px] text-muted">Watch urgency-driven local bidding, negotiation rounds, and emergent coordination paths.</p>
+      <div className="mb-2 neon-divider" />
 
       <div className="space-y-2 overflow-y-auto pr-1">
         {tasks.map((task) => (
-          <article key={task.id} className="rounded-xl border border-white/10 bg-panelSoft/70 p-3">
+          <article key={task.id} className="rounded-xl border border-white/10 bg-gradient-to-br from-panelSoft/90 to-panel/80 p-3 shadow-[inset_0_1px_0_rgba(152,186,255,0.16)]">
             <div className="flex items-center justify-between gap-2">
               <p className="text-xs font-semibold">{task.id}</p>
               <Badge tone={statusTone[task.status] ?? "muted"}>{task.status}</Badge>
             </div>
             <p className="mt-1 text-xs text-muted">{task.type.replaceAll("-", " ")} · zone {task.zone}</p>
-            <p className="mt-2 text-[11px] text-muted">
-              urgency {task.urgency}/5 · risk {task.riskLevel}/5 · assignees {task.assignedAgentIds.join(", ") || "none"}
-            </p>
+            <div className="mt-2 flex flex-wrap gap-1.5 text-[10px]">
+              <span className="rounded-md border border-white/15 bg-black/20 px-2 py-0.5 text-muted">urgency {task.urgency}/5</span>
+              <span className="rounded-md border border-white/15 bg-black/20 px-2 py-0.5 text-muted">risk {task.riskLevel}/5</span>
+              <span className="rounded-md border border-white/15 bg-black/20 px-2 py-0.5 text-muted">assignees {task.assignedAgentIds.join(", ") || "none"}</span>
+            </div>
             <p className="mt-1 text-[11px] text-muted">
               negotiation round {task.negotiationRound} · path {task.coordinationPath.join(" → ") || "pending"}
             </p>

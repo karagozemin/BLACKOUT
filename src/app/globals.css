@@ -17,6 +17,22 @@ body {
   min-height: 100vh;
 }
 
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(63, 119, 224, 0.7), rgba(45, 84, 170, 0.7));
+  border-radius: 999px;
+  border: 2px solid rgba(8, 15, 30, 0.8);
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(8, 15, 30, 0.55);
+  border-radius: 999px;
+}
+
 .grid-noise {
   background-size: 24px 24px;
   background-image: theme("backgroundImage.grid");
@@ -25,4 +41,46 @@ body {
 .glass {
   background: linear-gradient(135deg, rgba(19, 31, 53, 0.72), rgba(13, 21, 36, 0.74));
   backdrop-filter: blur(12px);
+}
+
+.panel-elevated {
+  background: linear-gradient(160deg, rgba(20, 34, 60, 0.72), rgba(10, 18, 33, 0.85));
+  box-shadow: inset 0 1px 0 rgba(130, 165, 255, 0.12), 0 14px 34px rgba(5, 13, 28, 0.52);
+}
+
+.neon-divider {
+  background: linear-gradient(90deg, rgba(89, 148, 255, 0), rgba(89, 148, 255, 0.7), rgba(89, 148, 255, 0));
+  height: 1px;
+}
+
+.blackout-flow .react-flow__controls {
+  overflow: hidden;
+}
+
+.blackout-flow .react-flow__controls-button {
+  width: 34px;
+  height: 34px;
+  background: rgba(8, 16, 30, 0.96);
+  border-color: rgba(157, 189, 255, 0.5);
+}
+
+.blackout-flow .react-flow__controls-button:hover {
+  background: rgba(24, 44, 80, 0.98);
+}
+
+.blackout-flow .react-flow__controls-button svg {
+  fill: #dbeafe;
+  stroke: #dbeafe;
+  stroke-width: 0.8;
+}
+
+.blackout-flow .react-flow__minimap-mask {
+  fill: rgba(56, 110, 219, 0.22);
+  stroke: rgba(191, 219, 254, 0.85);
+  stroke-width: 1;
+}
+
+.blackout-flow .react-flow__minimap-node {
+  stroke: rgba(191, 219, 254, 0.55);
+  stroke-width: 0.8;
 }

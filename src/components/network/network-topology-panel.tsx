@@ -29,6 +29,13 @@ const statusColor: Record<string, string> = {
   isolated: "#F75C5C"
 };
 
+const legend = [
+  { label: "Online", color: statusColor.online },
+  { label: "Busy", color: statusColor.busy },
+  { label: "Degraded", color: statusColor.degraded },
+  { label: "Offline/Isolated", color: statusColor.offline }
+];
+
 export function NetworkTopologyPanel({ stateOverride, compact = false }: { stateOverride?: SimulationState; compact?: boolean }) {
   const { state: liveState } = useSimulationStore();
   const state = stateOverride ?? liveState;
@@ -52,13 +59,15 @@ export function NetworkTopologyPanel({ stateOverride, compact = false }: { state
           trust: agent.metrics.trust
         },
         style: {
-          width: 140,
+          width: 144,
           borderRadius: 12,
-          padding: 6,
+          padding: 8,
           border: `1px solid ${statusColor[agent.status] ?? "#4AA6FF"}`,
-          background: "rgba(16, 24, 40, 0.9)",
+          background: "linear-gradient(145deg, rgba(15, 27, 46, 0.96), rgba(10, 18, 33, 0.96))",
           color: "#E5ECFF",
-          boxShadow: "0 0 18px rgba(59,130,246,0.15)"
+          boxShadow: "inset 0 1px 0 rgba(160,190,255,0.18), 0 0 22px rgba(59,130,246,0.18)",
+          fontSize: 11,
+          letterSpacing: "0.02em"
         }
       };
     });
@@ -73,31 +82,92 @@ export function NetworkTopologyPanel({ stateOverride, compact = false }: { state
             source: agent.id,
             target: peerId,
             style: {
-              stroke: "rgba(77, 126, 238, 0.45)",
-              strokeWidth: 1.2
-            }
+              stroke: "rgba(77, 126, 238, 0.42)",
+              strokeWidth: 1.1
+            },
+            animated: contextEdgeAnimated(agent.id, peerId, state)
           });
         }
       });
     });
 
     return { nodes: builtNodes, edges: builtEdges };
-  }, [state.agents]);
+  }, [state]);
 
   return (
     <Card className={compact ? "h-[420px] overflow-hidden p-2" : "h-[640px] overflow-hidden p-2"}>
       <div className="mb-2 px-2">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Peer-to-Peer Network Topology</h3>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Peer-to-Peer Network Topology</h3>
+          <div className="flex flex-wrap gap-1.5">
+            {legend.map((item) => (
+              <span key={item.label} className="rounded-md border border-white/15 bg-black/25 px-2 py-1 text-[10px] text-muted">
+                <span className="mr-1 inline-block h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
+                {item.label}
+              </span>
+            ))}
+          </div>
+        </div>
         <p className="text-xs text-muted">Live mesh view: discovery, neighbor links, and agent health under blackout conditions.</p>
         <p className="text-[11px] text-muted">No central orchestrator node exists; assignments emerge from local peer neighborhoods.</p>
+        <p className="text-[11px] text-muted">Top-right: zoom controls. Bottom-right: minimap overview.</p>
+        <div className="mt-2 neon-divider" />
       </div>
       <div className={compact ? "h-[360px] rounded-xl border border-white/10 bg-panel/40" : "h-[580px] rounded-xl border border-white/10 bg-panel/40"}>
-        <ReactFlow nodes={nodes} edges={edges} fitView>
-          <MiniMap zoomable pannable style={{ backgroundColor: "#0e1626" }} />
-          <Controls />
-          <Background color="#203457" gap={24} />
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          className="blackout-flow"
+          fitView
+          fitViewOptions={{ padding: 0.2 }}
+          proOptions={{ hideAttribution: true }}
+        >
+          <MiniMap
+            position="bottom-right"
+            zoomable
+            pannable
+            maskColor="rgba(56, 110, 219, 0.2)"
+            nodeColor={(node) => {
+              const status = String((node.data as AgentNodeData | undefined)?.status ?? "online");
+              return statusColor[status] ?? "#4AA6FF";
+            }}
+            nodeStrokeColor={() => "rgba(191, 219, 254, 0.9)"}
+            style={{
+              background: "linear-gradient(160deg, rgba(6, 12, 24, 0.98), rgba(8, 16, 31, 0.95))",
+              border: "1px solid rgba(157, 189, 255, 0.55)",
+              borderRadius: 10,
+              width: 156,
+              height: 94,
+              right: 14,
+              bottom: 14,
+              boxShadow: "0 10px 24px rgba(2,8,20,0.6), inset 0 0 0 1px rgba(187, 213, 255, 0.14)"
+            }}
+          />
+          <Controls
+            position="top-right"
+            showInteractive={false}
+            style={{
+              background: "rgba(8,16,30,0.95)",
+              border: "1px solid rgba(157,189,255,0.55)",
+              borderRadius: 10,
+              boxShadow: "0 10px 24px rgba(2,8,20,0.55), inset 0 0 0 1px rgba(187,213,255,0.12)"
+            }}
+          />
+          <Background color="rgba(71, 116, 214, 0.36)" gap={24} />
         </ReactFlow>
       </div>
     </Card>
   );
+}
+
+function contextEdgeAnimated(sourceId: string, targetId: string, state: SimulationState) {
+  const source = state.agents[sourceId];
+  const target = state.agents[targetId];
+  if (!source || !target) {
+    return false;
+  }
+
+  const activeSource = source.status === "busy" || source.status === "degraded";
+  const activeTarget = target.status === "busy" || target.status === "degraded";
+  return activeSource || activeTarget;
 }

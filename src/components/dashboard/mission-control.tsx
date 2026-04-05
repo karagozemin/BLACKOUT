@@ -184,7 +184,9 @@ export function MissionControl() {
     <main className="grid-noise min-h-screen p-4 md:p-6">
       <JudgeDemoOverlay beat={activeBeat} onStop={stopJudgeDemo} />
       <div className="mx-auto flex max-w-[1600px] flex-col gap-4">
-        <header className="glass flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 p-4 shadow-glow">
+        <header className="panel-elevated relative overflow-hidden rounded-2xl border border-info/25 p-4 shadow-glow">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(74,166,255,0.16),transparent_35%)]" />
+          <div className="relative flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-info">BLACKOUT EXCHANGE · Mission Control</p>
             <h1 className="text-2xl font-semibold">Leaderless Emergency Agent Economy</h1>
@@ -196,7 +198,7 @@ export function MissionControl() {
           <div className="flex items-center gap-2">
             <label className="text-xs text-muted">Speed</label>
             <select
-              className="rounded-md border border-white/20 bg-panel px-2 py-1 text-xs"
+              className="rounded-md border border-white/20 bg-panel px-2 py-1 text-xs shadow-[inset_0_1px_0_rgba(146,182,255,0.16)]"
               value={speed}
               onChange={(event) => setSpeed(Number(event.target.value))}
             >
@@ -220,35 +222,36 @@ export function MissionControl() {
               Mission Summary
             </Link>
           </div>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
           <div className="space-y-4 xl:col-span-8">
-            <div id="panel-network">
+            <div id="panel-network" className="rounded-2xl">
               <NetworkTopologyPanel />
             </div>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-              <div id="panel-tasks">
+              <div id="panel-tasks" className="rounded-2xl">
                 <TaskQueuePanel />
               </div>
-              <div id="panel-events">
+              <div id="panel-events" className="rounded-2xl">
                 <EventStreamPanel />
               </div>
             </div>
           </div>
 
           <div className="space-y-4 xl:col-span-4">
-            <div id="panel-status">
+            <div id="panel-status" className="rounded-2xl">
               <MissionStatusPanel />
             </div>
             <RealityBoundaryPanel />
-            <div id="panel-chaos">
+            <div id="panel-chaos" className="rounded-2xl">
               <ChaosControls />
             </div>
-            <div id="panel-proof">
+            <div id="panel-proof" className="rounded-2xl">
               <ProofPanel />
             </div>
-            <div id="panel-settlement">
+            <div id="panel-settlement" className="rounded-2xl">
               <SettlementPanel />
             </div>
           </div>

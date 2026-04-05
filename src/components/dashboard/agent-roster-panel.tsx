@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { useSimulationStore } from "@/store/simulation-store";
 
 function tone(status: string) {
@@ -11,19 +12,19 @@ function tone(status: string) {
   return "success";
 }
 
-export function AgentRosterPanel() {
+export function AgentRosterPanel({ className }: { className?: string }) {
   const { state } = useSimulationStore();
   const agents = Object.values(state.agents);
 
   return (
-    <Card>
+    <Card className={cn("flex h-full min-h-0 flex-col", className)}>
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Agent Roster</h3>
         <Badge tone="muted">{agents.length} heterogeneous nodes</Badge>
       </div>
       <p className="mb-2 text-[11px] text-muted">Per-node readiness, trust, and load distribution for decentralized task ownership.</p>
 
-      <div className="overflow-x-auto">
+      <div className="min-h-0 flex-1 overflow-auto">
         <table className="w-full min-w-[980px] text-left text-xs">
           <thead className="text-muted">
             <tr>

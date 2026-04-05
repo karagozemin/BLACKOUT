@@ -73,6 +73,7 @@ export function MissionControl() {
   const [demoRunning, setDemoRunning] = useState(false);
   const [activeDemoStep, setActiveDemoStep] = useState<number | null>(null);
   const timersRef = useRef<number[]>([]);
+  const executedStepsRef = useRef<Set<number>>(new Set());
 
   const activeBeat: DemoBeat | null =
     activeDemoStep === null
@@ -108,6 +109,10 @@ export function MissionControl() {
   }
 
   function executeBeatAction(index: number) {
+    if (executedStepsRef.current.has(index)) {
+      return;
+    }
+
     const beat = judgeFlow[index];
     if (!beat) {
       return;
@@ -142,9 +147,22 @@ export function MissionControl() {
         queueChaos(action);
       }
     }
+
+    executedStepsRef.current.add(index);
   }
 
-  function runDemoStep(index: number) {
+  function moveToDemoStep(index: number | null) {
+    if (index === null) {
+      setActiveDemoStep(null);
+      return;
+    }
+
+    if (index < 0) {
+      setActiveDemoStep(0);
+      executeBeatAction(0);
+      return;
+    }
+
     if (index >= judgeFlow.length) {
       setActiveDemoStep(null);
       setDemoRunning(false);
@@ -153,21 +171,34 @@ export function MissionControl() {
 
     setActiveDemoStep(index);
     executeBeatAction(index);
+  }
 
-    const timer = window.setTimeout(() => {
-      runDemoStep(index + 1);
-    }, judgeFlow[index]?.durationMs ?? 9000);
+  function goToNextDemoStep() {
+    clearDemoTimers();
+    if (activeDemoStep === null) {
+      moveToDemoStep(0);
+      return;
+    }
+    moveToDemoStep(activeDemoStep + 1);
+  }
 
-    timersRef.current.push(timer);
+  function goToPrevDemoStep() {
+    clearDemoTimers();
+    if (activeDemoStep === null) {
+      moveToDemoStep(0);
+      return;
+    }
+    moveToDemoStep(Math.max(0, activeDemoStep - 1));
   }
 
   function startJudgeDemo() {
     clearDemoTimers();
+    executedStepsRef.current.clear();
     reset();
     setSpeed(2);
     setRunning(true);
     setDemoRunning(true);
-    runDemoStep(0);
+    moveToDemoStep(0);
   }
 
   function stopJudgeDemo() {
@@ -180,10 +211,41 @@ export function MissionControl() {
     return () => clearDemoTimers();
   }, []);
 
+  useEffect(() => {
+    if (!demoRunning || activeDemoStep === null) {
+      return;
+    }
+
+    if (activeDemoStep >= judgeFlow.length - 1) {
+      return;
+    }
+
+    clearDemoTimers();
+    const timer = window.setTimeout(() => {
+      moveToDemoStep(activeDemoStep + 1);
+    }, judgeFlow[activeDemoStep]?.durationMs ?? 9000);
+
+    timersRef.current.push(timer);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [activeDemoStep, demoRunning, moveToDemoStep]);
+
+  const canPrevDemoStep = demoRunning && activeDemoStep !== null && activeDemoStep > 0;
+  const canNextDemoStep = demoRunning && activeDemoStep !== null && activeDemoStep < judgeFlow.length - 1;
+
   return (
     <main className="grid-noise min-h-screen p-4 md:p-6">
-      <JudgeDemoOverlay beat={activeBeat} onStop={stopJudgeDemo} />
-      <div className="mx-auto flex max-w-[1600px] flex-col gap-4">
+      <JudgeDemoOverlay
+        beat={activeBeat}
+        onStop={stopJudgeDemo}
+        onPrev={goToPrevDemoStep}
+        onNext={goToNextDemoStep}
+        canPrev={canPrevDemoStep}
+        canNext={canNextDemoStep}
+      />
+      <div className="mx-auto flex max-w-[1600px] flex-col gap-5">
         <header className="panel-elevated relative overflow-hidden rounded-2xl border border-info/25 p-4 shadow-glow">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(74,166,255,0.16),transparent_35%)]" />
           <div className="relative flex flex-wrap items-center justify-between gap-3">
@@ -225,12 +287,12 @@ export function MissionControl() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
-          <div className="space-y-4 xl:col-span-8">
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
+          <div className="space-y-5 xl:col-span-8">
             <div id="panel-network" className="rounded-2xl">
               <NetworkTopologyPanel />
             </div>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
               <div id="panel-tasks" className="rounded-2xl">
                 <TaskQueuePanel />
               </div>
@@ -238,9 +300,12 @@ export function MissionControl() {
                 <EventStreamPanel />
               </div>
             </div>
+            <div id="panel-roster" className="rounded-2xl">
+              <AgentRosterPanel className="xl:min-h-[440px]" />
+            </div>
           </div>
 
-          <div className="space-y-4 xl:col-span-4">
+          <div className="space-y-5 xl:col-span-4">
             <div id="panel-status" className="rounded-2xl">
               <MissionStatusPanel />
             </div>
@@ -256,8 +321,6 @@ export function MissionControl() {
             </div>
           </div>
         </div>
-
-        <AgentRosterPanel />
 
         <div className="flex justify-end">
           <Link id="judge-summary-cta" href="/mission-summary" className="rounded-xl border border-info/40 bg-info/15 px-4 py-2 text-xs font-semibold text-info">

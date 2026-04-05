@@ -14,10 +14,18 @@ export interface DemoBeat {
 
 export function JudgeDemoOverlay({
   beat,
-  onStop
+  onStop,
+  onPrev,
+  onNext,
+  canPrev,
+  canNext
 }: {
   beat: DemoBeat | null;
   onStop: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  canPrev: boolean;
+  canNext: boolean;
 }) {
   if (!beat) {
     return null;
@@ -75,7 +83,15 @@ export function JudgeDemoOverlay({
           Step {beat.step}/{beat.totalSteps}: {beat.title}
         </p>
         <p className="mt-2 text-xs leading-relaxed text-muted">{beat.description}</p>
-        <div className="mt-3 flex justify-end">
+        <div className="mt-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" onClick={onPrev} disabled={!canPrev}>
+              ← Prev
+            </Button>
+            <Button variant="secondary" onClick={onNext} disabled={!canNext}>
+              Next →
+            </Button>
+          </div>
           <Button variant="secondary" onClick={onStop}>
             Stop Demo
           </Button>

@@ -254,9 +254,9 @@ export function MissionControl() {
             <Image
               src="/blackout-logo.png"
               alt="BLACKOUT EXCHANGE logo"
-              width={42}
-              height={42}
-              className="mt-0.5 rounded-lg border border-info/25 bg-black/25 p-1"
+              width={60}
+              height={60}
+              className="mt-0.5 rounded-lg border border-info/25 bg-black/25 p-1.5"
             />
             <div>
             <p className="text-xs uppercase tracking-[0.2em] text-info">BLACKOUT EXCHANGE · Mission Control</p>

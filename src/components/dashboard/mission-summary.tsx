@@ -33,9 +33,9 @@ export function MissionSummary() {
             <Image
               src="/blackout-logo.png"
               alt="BLACKOUT EXCHANGE logo"
-              width={40}
-              height={40}
-              className="mt-0.5 rounded-lg border border-info/25 bg-black/25 p-1"
+              width={56}
+              height={56}
+              className="mt-0.5 rounded-lg border border-info/25 bg-black/25 p-1.5"
             />
             <div>
             <p className="text-xs uppercase tracking-[0.2em] text-info">BLACKOUT EXCHANGE · Mission Summary</p>

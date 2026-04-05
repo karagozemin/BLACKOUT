@@ -38,9 +38,9 @@ export default function LandingPage() {
             <Image
               src="/blackout-logo.png"
               alt="BLACKOUT EXCHANGE logo"
-              width={52}
-              height={52}
-              className="rounded-xl border border-info/30 bg-black/30 p-1 shadow-glow"
+              width={84}
+              height={84}
+              className="rounded-xl border border-info/30 bg-black/30 p-1.5 shadow-glow"
               priority
             />
             <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.16em]">

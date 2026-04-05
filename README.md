@@ -97,6 +97,20 @@ npm run sim:smoke
 5. Trigger fake completion and show verifier rejection + blocked settlement.
 6. Show successful settlement receipts only after proof quorum.
 
+## Judge Demo Mode (60–90s guided)
+
+- In `/mission-control`, click `Start Judge Demo`.
+- The app runs a deterministic 8-step guided spotlight:
+	1. peer discovery
+	2. local negotiation
+	3. node failure
+	4. failover recovery
+	5. malicious fake completion
+	6. verifier rejection
+	7. proof-before-settlement
+	8. mission summary handoff
+- Spotlights and step cards direct judges to the right panel at the right time.
+
 ## What is simulated vs real
 
 Simulated:

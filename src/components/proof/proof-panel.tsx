@@ -14,6 +14,7 @@ export function ProofPanel() {
         <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Proof of Coordination</h3>
         <Badge tone="info">core innovation</Badge>
       </div>
+      <p className="mb-2 text-[11px] text-muted">Completion claims must include multi-witness evidence and acceptable confidence before verifier review.</p>
 
       {proofs.length < 1 ? (
         <p className="text-xs text-muted">No completion claims yet. Proof artifacts appear once execution is claimed.</p>

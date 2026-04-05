@@ -21,6 +21,7 @@ export function AgentRosterPanel() {
         <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Agent Roster</h3>
         <Badge tone="muted">{agents.length} heterogeneous nodes</Badge>
       </div>
+      <p className="mb-2 text-[11px] text-muted">Per-node readiness, trust, and load distribution for decentralized task ownership.</p>
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[980px] text-left text-xs">

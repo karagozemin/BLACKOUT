@@ -88,7 +88,8 @@ export function NetworkTopologyPanel({ stateOverride, compact = false }: { state
     <Card className={compact ? "h-[420px] overflow-hidden p-2" : "h-[640px] overflow-hidden p-2"}>
       <div className="mb-2 px-2">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Peer-to-Peer Network Topology</h3>
-        <p className="text-xs text-muted">No central orchestrator node exists. Consensus emerges through local peer links.</p>
+        <p className="text-xs text-muted">Live mesh view: discovery, neighbor links, and agent health under blackout conditions.</p>
+        <p className="text-[11px] text-muted">No central orchestrator node exists; assignments emerge from local peer neighborhoods.</p>
       </div>
       <div className={compact ? "h-[360px] rounded-xl border border-white/10 bg-panel/40" : "h-[580px] rounded-xl border border-white/10 bg-panel/40"}>
         <ReactFlow nodes={nodes} edges={edges} fitView>

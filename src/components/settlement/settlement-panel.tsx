@@ -16,6 +16,7 @@ export function SettlementPanel() {
         <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Verification + Settlement Gate</h3>
         <Badge tone="warning">proof before payment</Badge>
       </div>
+      <p className="mb-2 text-[11px] text-muted">Payments remain blocked until verifier quorum confirms sufficient coordination proof.</p>
 
       <div className="space-y-2">
         <div className="rounded-xl border border-white/10 bg-panelSoft/70 p-3">

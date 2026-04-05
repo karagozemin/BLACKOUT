@@ -24,6 +24,7 @@ export function TaskQueuePanel() {
         <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Live Task Queue</h3>
         <Badge tone="muted">{tasks.length} total</Badge>
       </div>
+      <p className="mb-2 text-[11px] text-muted">Watch urgency-driven local bidding, negotiation rounds, and emergent coordination paths.</p>
 
       <div className="space-y-2 overflow-y-auto pr-1">
         {tasks.map((task) => (

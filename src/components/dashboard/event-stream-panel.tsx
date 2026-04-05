@@ -22,6 +22,7 @@ export function EventStreamPanel() {
         <h3 className="text-sm font-semibold uppercase tracking-wide text-info">Coordination Log</h3>
         <Badge tone="muted">judge readable</Badge>
       </div>
+      <p className="mb-2 text-[11px] text-muted">Single source of truth for local consensus, failover, verifier actions, and settlement gating.</p>
 
       <div className="space-y-2 overflow-y-auto pr-1">
         {events.map((event) => (

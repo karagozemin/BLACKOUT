@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AgentRosterPanel } from "@/components/dashboard/agent-roster-panel";
 import { ChaosControls } from "@/components/dashboard/chaos-controls";
 import { EventStreamPanel } from "@/components/dashboard/event-stream-panel";
@@ -103,12 +103,12 @@ export function MissionControl() {
     return `${online}/${Object.keys(state.agents).length} agents reachable`; 
   }, [state.agents]);
 
-  function clearDemoTimers() {
+  const clearDemoTimers = useCallback(() => {
     timersRef.current.forEach((timer) => window.clearTimeout(timer));
     timersRef.current = [];
-  }
+  }, []);
 
-  function executeBeatAction(index: number) {
+  const executeBeatAction = useCallback((index: number) => {
     if (executedStepsRef.current.has(index)) {
       return;
     }
@@ -149,9 +149,9 @@ export function MissionControl() {
     }
 
     executedStepsRef.current.add(index);
-  }
+  }, [queueChaos]);
 
-  function moveToDemoStep(index: number | null) {
+  const moveToDemoStep = useCallback((index: number | null) => {
     if (index === null) {
       setActiveDemoStep(null);
       return;
@@ -171,7 +171,7 @@ export function MissionControl() {
 
     setActiveDemoStep(index);
     executeBeatAction(index);
-  }
+  }, [executeBeatAction]);
 
   function goToNextDemoStep() {
     clearDemoTimers();
@@ -209,7 +209,7 @@ export function MissionControl() {
 
   useEffect(() => {
     return () => clearDemoTimers();
-  }, []);
+  }, [clearDemoTimers]);
 
   useEffect(() => {
     if (!demoRunning || activeDemoStep === null) {
@@ -230,7 +230,7 @@ export function MissionControl() {
     return () => {
       window.clearTimeout(timer);
     };
-  }, [activeDemoStep, demoRunning, moveToDemoStep]);
+  }, [activeDemoStep, clearDemoTimers, demoRunning, moveToDemoStep]);
 
   const canPrevDemoStep = demoRunning && activeDemoStep !== null && activeDemoStep > 0;
   const canNextDemoStep = demoRunning && activeDemoStep !== null && activeDemoStep < judgeFlow.length - 1;

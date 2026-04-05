@@ -1,0 +1,37 @@
+name: CI Quality Gates
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  quality-gates:
+    name: Lint, Build, E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Deterministic Judge Demo E2E
+        run: npm run test:e2e

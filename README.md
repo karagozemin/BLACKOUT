@@ -96,6 +96,17 @@ Run deterministic UI smoke checks:
 npm run test:e2e
 ```
 
+## Quality Gates
+
+This project includes a minimal CI pipeline in `.github/workflows/ci.yml` with these required gates:
+
+1. `npm install`
+2. `npm run lint`
+3. `npm run build`
+4. `npm run test:e2e`
+
+The Judge Demo path is protected by deterministic Playwright assertions (guided steps, rejection evidence, and Mission Summary continuity), so demo regressions are caught before merge.
+
 The suite validates:
 
 - Mission Control renders correctly

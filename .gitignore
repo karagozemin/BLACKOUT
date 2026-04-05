@@ -37,4 +37,6 @@ out
 .next
 .turbo
 .vercel
+playwright-report
+test-results
 

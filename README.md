@@ -81,6 +81,28 @@ Run smoke harness:
 npm run sim:smoke
 ```
 
+## UI Smoke Test (Playwright)
+
+First-time setup:
+
+```bash
+npm install
+npx playwright install chromium
+```
+
+Run deterministic UI smoke checks:
+
+```bash
+npm run test:e2e
+```
+
+The suite validates:
+
+- Mission Control renders correctly
+- `Start Judge Demo` launches and advances guided steps
+- Mission Summary receives in-session state after navigation
+- Direct Summary visit shows explicit "No Mission Run Yet" guidance
+
 ## Mission Summary + Replay
 
 - Visit `/mission-summary` after running Mission Control.

@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  border-color: rgba(90, 110, 150, 0.28);
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  background-image: radial-gradient(circle at top right, rgba(34, 65, 122, 0.35), transparent 46%),
+    radial-gradient(circle at 10% 20%, rgba(52, 76, 158, 0.2), transparent 30%);
+  min-height: 100vh;
+}
+
+.grid-noise {
+  background-size: 24px 24px;
+  background-image: theme("backgroundImage.grid");
+}
+
+.glass {
+  background: linear-gradient(135deg, rgba(19, 31, 53, 0.72), rgba(13, 21, 36, 0.74));
+  backdrop-filter: blur(12px);
+}

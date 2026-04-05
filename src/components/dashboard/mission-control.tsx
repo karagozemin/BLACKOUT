@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AgentRosterPanel } from "@/components/dashboard/agent-roster-panel";
 import { ChaosControls } from "@/components/dashboard/chaos-controls";
@@ -215,9 +216,9 @@ export function MissionControl() {
             >
               {demoRunning ? "Stop Judge Demo" : "Start Judge Demo"}
             </button>
-            <a href="/mission-summary" className="rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold text-foreground hover:bg-white/20">
+            <Link href="/mission-summary" className="rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold text-foreground hover:bg-white/20">
               Mission Summary
-            </a>
+            </Link>
           </div>
         </header>
 
@@ -256,9 +257,9 @@ export function MissionControl() {
         <AgentRosterPanel />
 
         <div className="flex justify-end">
-          <a id="judge-summary-cta" href="/mission-summary" className="rounded-xl border border-info/40 bg-info/15 px-4 py-2 text-xs font-semibold text-info">
+          <Link id="judge-summary-cta" href="/mission-summary" className="rounded-xl border border-info/40 bg-info/15 px-4 py-2 text-xs font-semibold text-info">
             Open Mission Summary Replay
-          </a>
+          </Link>
         </div>
       </div>
     </main>

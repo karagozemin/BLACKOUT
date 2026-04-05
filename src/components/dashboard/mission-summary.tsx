@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { NetworkTopologyPanel } from "@/components/network/network-topology-panel";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,7 @@ import { useSimulationStore } from "@/store/simulation-store";
 export function MissionSummary() {
   const { state, history } = useSimulationStore();
   const [replayTick, setReplayTick] = useState<number>(state.tick);
+  const hasRunData = state.tick > 0 || history.length > 1;
 
   const replaySnapshot = useMemo(
     () => history.find((snapshot) => snapshot.tick === replayTick) ?? history[history.length - 1],
@@ -34,11 +36,25 @@ export function MissionSummary() {
           <div className="flex items-center gap-2">
             <Badge tone="muted">seed {state.seed}</Badge>
             <Badge tone="info">ticks {state.tick}</Badge>
-            <a href="/mission-control">
+            <Link href="/mission-control">
               <Button variant="secondary">Back to Mission Control</Button>
-            </a>
+            </Link>
           </div>
         </header>
+
+        {!hasRunData && (
+          <Card>
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-warning">No Mission Run Yet</h3>
+            <p className="mt-2 text-xs text-muted">
+              Mission Summary reads live simulation history. Start or run Judge Demo in Mission Control first, then come back here.
+            </p>
+            <div className="mt-3">
+              <Link href="/mission-control">
+                <Button variant="primary">Go Start Mission Control</Button>
+              </Link>
+            </div>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
           <div className="space-y-4 xl:col-span-8">

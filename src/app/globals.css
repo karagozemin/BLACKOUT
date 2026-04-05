@@ -74,13 +74,3 @@ body {
   stroke-width: 0.8;
 }
 
-.blackout-flow .react-flow__minimap-mask {
-  fill: rgba(56, 110, 219, 0.22);
-  stroke: rgba(191, 219, 254, 0.85);
-  stroke-width: 1;
-}
-
-.blackout-flow .react-flow__minimap-node {
-  stroke: rgba(191, 219, 254, 0.55);
-  stroke-width: 0.8;
-}

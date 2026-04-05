@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import {
   Background,
   Controls,
-  MiniMap,
   ReactFlow,
   type Edge,
   type Node
@@ -110,7 +109,7 @@ export function NetworkTopologyPanel({ stateOverride, compact = false }: { state
         </div>
         <p className="text-xs text-muted">Live mesh view: discovery, neighbor links, and agent health under blackout conditions.</p>
         <p className="text-[11px] text-muted">No central orchestrator node exists; assignments emerge from local peer neighborhoods.</p>
-        <p className="text-[11px] text-muted">Top-right: zoom controls. Bottom-right: minimap overview.</p>
+        <p className="text-[11px] text-muted">Top-right: zoom controls.</p>
         <div className="mt-2 neon-divider" />
       </div>
       <div className={compact ? "h-[360px] rounded-xl border border-white/10 bg-panel/40" : "h-[580px] rounded-xl border border-white/10 bg-panel/40"}>
@@ -122,27 +121,6 @@ export function NetworkTopologyPanel({ stateOverride, compact = false }: { state
           fitViewOptions={{ padding: 0.2 }}
           proOptions={{ hideAttribution: true }}
         >
-          <MiniMap
-            position="bottom-right"
-            zoomable
-            pannable
-            maskColor="rgba(56, 110, 219, 0.2)"
-            nodeColor={(node) => {
-              const status = String((node.data as AgentNodeData | undefined)?.status ?? "online");
-              return statusColor[status] ?? "#4AA6FF";
-            }}
-            nodeStrokeColor={() => "rgba(191, 219, 254, 0.9)"}
-            style={{
-              background: "linear-gradient(160deg, rgba(6, 12, 24, 0.98), rgba(8, 16, 31, 0.95))",
-              border: "1px solid rgba(157, 189, 255, 0.55)",
-              borderRadius: 10,
-              width: 156,
-              height: 94,
-              right: 14,
-              bottom: 14,
-              boxShadow: "0 10px 24px rgba(2,8,20,0.6), inset 0 0 0 1px rgba(187, 213, 255, 0.14)"
-            }}
-          />
           <Controls
             position="top-right"
             showInteractive={false}

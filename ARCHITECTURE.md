@@ -141,13 +141,35 @@ Mission Summary consumes this history for timeline playback.
 
 Goal: catch demo regressions before merge/submission.
 
-## 10) Simulation boundary and production transition
+## 10) Swarm integration layer (MQTT + FoxMQ + Vertex AI)
+
+### 10.1 Transport adapters
+
+- `src/lib/integrations/mqtt-transport.ts` handles broker connection and JSON publish with QoS 1.
+- `MQTT_BROKER_URL` targets a standard MQTT broker topic space (`blackout/swarm/*`).
+- `FOXMQ_BROKER_URL` uses the same MQTT protocol for FoxMQ-compatible consensus-backed messaging topics.
+
+### 10.2 Swarm sync orchestration
+
+- `src/lib/integrations/swarm-sync.ts` publishes tick snapshots, recent events, and coordination digest.
+- `src/app/api/swarm/sync/route.ts` exposes a Node.js API endpoint to push mission-control ticks into transport adapters.
+- `src/components/dashboard/swarm-integration-panel.tsx` allows interactive sync and displays publish status + warnings.
+
+### 10.3 Vertex AI advisor
+
+- `src/lib/integrations/vertex-advisor.ts` requests one-line coordination guidance from Vertex AI.
+- If Vertex config is unavailable, deterministic fallback advice is returned to keep demo flow reproducible.
+
+## 11) Simulation boundary and production transition
 
 ### Included today
 
 - deterministic in-memory runtime
 - proof/verifier/settlement decision chain
 - replay-ready historical snapshots and metrics
+- MQTT broker publishing for swarm tick/event payloads
+- FoxMQ-compatible MQTT profile for decentralized broker integration
+- Vertex AI recommendation hook with graceful fallback
 
 ### Not integrated yet
 
@@ -159,10 +181,11 @@ Goal: catch demo regressions before merge/submission.
 
 1. define `verification/settlement` adapter interfaces
 2. map contract operations (`submitProof`, `verify`, `release`)
-3. connect simulation events to transport/message infrastructure
+3. persist MQTT/FoxMQ message receipts for post-mission audit
 4. move replay from in-memory snapshots to audit log storage
+5. replace fallback advisor with strict Vertex policy prompts + evaluation set
 
-## 11) Why this architecture is strong
+## 12) Why this architecture is strong
 
 - It demonstrates decentralized coordination in a clear way.
 - It tests fault and adversarial behavior in one scenario.

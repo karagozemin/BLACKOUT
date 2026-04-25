@@ -9,6 +9,7 @@ import { EventStreamPanel } from "@/components/dashboard/event-stream-panel";
 import { JudgeDemoOverlay, type DemoBeat } from "@/components/dashboard/judge-demo-overlay";
 import { MissionStatusPanel } from "@/components/dashboard/mission-status-panel";
 import { RealityBoundaryPanel } from "@/components/dashboard/reality-boundary-panel";
+import { SwarmIntegrationPanel } from "@/components/dashboard/swarm-integration-panel";
 import { TaskQueuePanel } from "@/components/dashboard/task-queue-panel";
 import { NetworkTopologyPanel } from "@/components/network/network-topology-panel";
 import { ProofPanel } from "@/components/proof/proof-panel";
@@ -262,7 +263,7 @@ export function MissionControl() {
             <p className="text-xs uppercase tracking-[0.2em] text-info">BLACKOUT EXCHANGE · Mission Control</p>
             <h1 className="text-2xl font-semibold">Leaderless Emergency Agent Economy</h1>
             <p className="text-sm text-muted">{headline} · Deterministic seed {state.seed} · Tick {state.tick}</p>
-            <p className="mt-1 text-[11px] text-muted">Simulation runtime is local/deterministic. Architecture boundaries are protocol-adapter ready.</p>
+            <p className="mt-1 text-[11px] text-muted">Simulation runtime is deterministic. Use Swarm Integrations panel to sync ticks to MQTT/FoxMQ and request Vertex AI guidance.</p>
             <p className="mt-1 text-[11px] text-muted">Judge Demo runs a repeatable 8-step story in ~72 seconds.</p>
             </div>
           </div>
@@ -328,6 +329,9 @@ export function MissionControl() {
             </div>
             <div id="panel-settlement" className="rounded-2xl">
               <SettlementPanel />
+            </div>
+            <div id="panel-swarm" className="rounded-2xl">
+              <SwarmIntegrationPanel />
             </div>
           </div>
         </div>

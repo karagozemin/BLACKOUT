@@ -22,6 +22,8 @@ BLACKOUT EXCHANGE is a deterministic simulation of a degraded emergency environm
 - `Tailwind CSS` + `Framer Motion`
 - `Zustand` (simulation runtime state)
 - `React Flow` (mesh topology visualization)
+- `mqtt` (network transport for MQTT + FoxMQ-compatible broker)
+- `@google-cloud/vertexai` (Vertex AI coordination hint generation)
 - `Playwright` (end-to-end validation)
 
 ## 🗂️ Project structure (quick map)
@@ -65,6 +67,9 @@ This prevents "completed" claims from unlocking value without sufficient evidenc
 - Witness evidence generation and pseudo hashing
 - Verifier approval/rejection decisions
 - Settlement receipt generation
+- MQTT publish adapter (`src/lib/integrations/mqtt-transport.ts`)
+- FoxMQ-compatible MQTT profile (`src/lib/integrations/swarm-sync.ts`)
+- Vertex AI advisor with deterministic fallback (`src/lib/integrations/vertex-advisor.ts`)
 
 ### Not yet integrated
 
@@ -91,6 +96,7 @@ This prevents "completed" claims from unlocking value without sufficient evidenc
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
@@ -112,6 +118,14 @@ CI enforces the same three gates in `.github/workflows/ci.yml`.
 npm run sim:smoke
 ```
 
+## 🌐 Networked smoke run (MQTT + FoxMQ + Vertex AI)
+
+```bash
+npm run sim:networked
+```
+
+If `MQTT_BROKER_URL`, `FOXMQ_BROKER_URL`, or Vertex credentials are not configured, the run still succeeds with skip/fallback reporting.
+
 ## 🧠 60-second jury walkthrough
 
 1. Show topology and highlight no central orchestrator
@@ -126,6 +140,7 @@ npm run sim:smoke
 - [ ] `lint/build/e2e` all green
 - [ ] `README.md` and `ARCHITECTURE.md` aligned
 - [ ] Judge Demo flow verified live
+- [ ] `Swarm Integrations` panel tested with `/api/swarm/sync`
 - [ ] Simulation boundary clearly stated
 
 ---
